@@ -1,0 +1,13 @@
+{
+  "domain": "energi_fyn",
+  "name": "Energi Fyn",
+  "codeowners": ["@ha1fdan"],
+  "config_flow": true,
+  "dependencies": ["recorder"],
+  "documentation": "https://github.com/ha1fdan/energiFyn_HA",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/ha1fdan/energiFyn_HA/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}

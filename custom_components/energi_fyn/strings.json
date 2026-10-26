@@ -1,0 +1,101 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Energi Fyn",
+        "description": "Log in with the same email and password you use in the Energi Fyn app.",
+        "data": {
+          "username": "Email",
+          "password": "Password"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Log in again",
+        "description": "Energi Fyn rejected the saved login. Enter your password again.",
+        "data": {
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Wrong email or password",
+      "cannot_connect": "Could not reach Energi Fyn",
+      "no_customer": "No customer found on this account",
+      "unknown": "Unexpected error"
+    },
+    "abort": {
+      "already_configured": "This customer is already configured",
+      "reauth_successful": "Login refreshed"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "day_consumption": {
+        "name": "Latest day consumption"
+      },
+      "day_cost": {
+        "name": "Latest day cost"
+      },
+      "day_avg_price": {
+        "name": "Latest day average price"
+      },
+      "day_peak_hour": {
+        "name": "Latest day peak hour"
+      },
+      "week_consumption": {
+        "name": "Last 7 days consumption"
+      },
+      "week_cost": {
+        "name": "Last 7 days cost"
+      },
+      "month_consumption": {
+        "name": "Consumption this month"
+      },
+      "month_cost": {
+        "name": "Cost this month"
+      },
+      "month_benchmark": {
+        "name": "Benchmark this month"
+      },
+      "month_vs_benchmark": {
+        "name": "This month vs benchmark"
+      },
+      "prev_month_consumption": {
+        "name": "Consumption last month"
+      },
+      "prev_month_cost": {
+        "name": "Cost last month"
+      },
+      "prev_month_benchmark": {
+        "name": "Benchmark last month"
+      },
+      "prev_month_vs_benchmark": {
+        "name": "Last month vs benchmark"
+      },
+      "last_meter_reading": {
+        "name": "Last meter reading"
+      },
+      "estimated_annual_consumption": {
+        "name": "Estimated annual consumption"
+      },
+      "product": {
+        "name": "Electricity product"
+      },
+      "product_price": {
+        "name": "Product price"
+      },
+      "home_area": {
+        "name": "Home area"
+      },
+      "residents": {
+        "name": "Residents"
+      },
+      "heating": {
+        "name": "Heating"
+      },
+      "electric_cars": {
+        "name": "Electric cars"
+      }
+    }
+  }
+}
