@@ -1,4 +1,5 @@
 """Sensors for Energi Fyn."""
+
 from __future__ import annotations
 
 from collections.abc import Callable
@@ -32,7 +33,9 @@ class EnergiFynSensorDescription(SensorEntityDescription):
 _KWH = UnitOfEnergy.KILO_WATT_HOUR
 
 
-def _energy(key: str, field: str, precision: int = 2, **kw: Any) -> EnergiFynSensorDescription:
+def _energy(
+    key: str, field: str, precision: int = 2, **kw: Any
+) -> EnergiFynSensorDescription:
     return EnergiFynSensorDescription(
         key=key,
         translation_key=key,
@@ -91,7 +94,9 @@ SENSORS: tuple[EnergiFynSensorDescription, ...] = (
         suggested_display_precision=2,
         value_fn=lambda d: d.day_peak_kwh,
         attr_fn=lambda d: {
-            "hour_start": d.day_peak_hour.astimezone(DK).isoformat() if d.day_peak_hour else None
+            "hour_start": d.day_peak_hour.astimezone(DK).isoformat()
+            if d.day_peak_hour
+            else None
         },
     ),
     # last 7 published days
@@ -123,7 +128,9 @@ SENSORS: tuple[EnergiFynSensorDescription, ...] = (
         0,
         entity_category=EntityCategory.DIAGNOSTIC,
         attr_fn=lambda d: {
-            "reading_date": d.last_reading_date.date().isoformat() if d.last_reading_date else None,
+            "reading_date": d.last_reading_date.date().isoformat()
+            if d.last_reading_date
+            else None,
             "reading_method": d.reading_method,
         },
     ),
@@ -154,7 +161,12 @@ SENSORS: tuple[EnergiFynSensorDescription, ...] = (
         },
     ),
     # home profile (static)
-    _plain("home_area", "area", native_unit_of_measurement=UnitOfArea.SQUARE_METERS, **_STATIC),
+    _plain(
+        "home_area",
+        "area",
+        native_unit_of_measurement=UnitOfArea.SQUARE_METERS,
+        **_STATIC,
+    ),
     _plain("residents", "residents", **_STATIC),
     _plain("heating", "heating", **_STATIC),
     _plain("electric_cars", "electric_cars", **_STATIC),
@@ -189,7 +201,9 @@ class EnergiFynSensor(CoordinatorEntity[EnergiFynCoordinator], SensorEntity):
         super().__init__(coordinator)
         self.entity_description = description
         self._meter = meter
-        self._attr_unique_id = f"{coordinator.customer_id}_{meter.slug}_{description.key}"
+        self._attr_unique_id = (
+            f"{coordinator.customer_id}_{meter.slug}_{description.key}"
+        )
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, f"{coordinator.customer_id}_{meter.slug}")},
             name=meter.name,

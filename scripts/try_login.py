@@ -2,17 +2,20 @@
 
 Usage: EF_USER=... EF_PASS=... python3 scripts/try_login.py
 """
+
 import asyncio
 import importlib.util
 import os
-import sys
 from datetime import datetime, timedelta
 
 import aiohttp
 
 # Load api.py directly so the HA package __init__ (needs homeassistant) isn't imported.
 spec = importlib.util.spec_from_file_location(
-    "ef_api", os.path.join(os.path.dirname(__file__), "..", "custom_components", "energi_fyn", "api.py")
+    "ef_api",
+    os.path.join(
+        os.path.dirname(__file__), "..", "custom_components", "energi_fyn", "api.py"
+    ),
 )
 api = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(api)
@@ -32,13 +35,33 @@ async def main() -> None:
         estates = await c2.estates(cust)
         for e in estates:
             for m in e["meters"]:
-                print("estate", e["estateId"], "meter", m["number"], "active", m["isActive"])
+                print(
+                    "estate",
+                    e["estateId"],
+                    "meter",
+                    m["number"],
+                    "active",
+                    m["isActive"],
+                )
         e, m = estates[0], estates[0]["meters"][0]
         end = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         start = end - timedelta(days=7)
-        d = await c2.consumption(cust, e["estateId"], api.EnergiFynClient.meter_id(m), start, end, hourly=False)
+        d = await c2.consumption(
+            cust,
+            e["estateId"],
+            api.EnergiFynClient.meter_id(m),
+            start,
+            end,
+            hourly=False,
+        )
         for v in d["consumptionValues"]:
-            print(v["date"][:10], v["meassurements"][0]["kWh"], "kWh", round(v["price"], 2), "kr")
+            print(
+                v["date"][:10],
+                v["meassurements"][0]["kWh"],
+                "kWh",
+                round(v["price"], 2),
+                "kr",
+            )
         print("refresh token rotated:", c2.refresh_token != c.refresh_token)
 
 

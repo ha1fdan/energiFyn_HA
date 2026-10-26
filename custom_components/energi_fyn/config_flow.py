@@ -1,4 +1,5 @@
 """Config flow for Energi Fyn."""
+
 from __future__ import annotations
 
 from collections.abc import Mapping
@@ -63,7 +64,9 @@ class EnergiFynConfigFlow(ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
-    async def async_step_reauth(self, entry_data: Mapping[str, Any]) -> ConfigFlowResult:
+    async def async_step_reauth(
+        self, entry_data: Mapping[str, Any]
+    ) -> ConfigFlowResult:
         self._reauth_username = entry_data[CONF_USERNAME]
         return await self.async_step_reauth_confirm()
 

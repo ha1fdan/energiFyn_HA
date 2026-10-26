@@ -1,4 +1,5 @@
 """Polling and long-term statistics import for Energi Fyn."""
+
 from __future__ import annotations
 
 import logging
@@ -108,7 +109,11 @@ class EnergiFynCoordinator(DataUpdateCoordinator[dict[str, MeterData]]):
         self, hass: HomeAssistant, entry: ConfigEntry, client: EnergiFynClient
     ) -> None:
         super().__init__(
-            hass, _LOGGER, config_entry=entry, name=DOMAIN, update_interval=UPDATE_INTERVAL
+            hass,
+            _LOGGER,
+            config_entry=entry,
+            name=DOMAIN,
+            update_interval=UPDATE_INTERVAL,
         )
         self.client = client
         self.customer_id: str = entry.data[CONF_CUSTOMER_ID]
@@ -137,7 +142,9 @@ class EnergiFynCoordinator(DataUpdateCoordinator[dict[str, MeterData]]):
 
     async def _async_update_data(self) -> dict[str, MeterData]:
         try:
-            estates = {e["estateId"]: e for e in await self.client.estates(self.customer_id)}
+            estates = {
+                e["estateId"]: e for e in await self.client.estates(self.customer_id)
+            }
             products = await self.client.products(self.customer_id)
             return {
                 m.slug: await self._update_meter(m, estates.get(m.estate_id), products)
@@ -156,7 +163,9 @@ class EnergiFynCoordinator(DataUpdateCoordinator[dict[str, MeterData]]):
         self._fill_estate(data, meter, estate)
         self._fill_product(data, meter, products)
 
-        today = datetime.now(DK).replace(tzinfo=None, hour=0, minute=0, second=0, microsecond=0)
+        today = datetime.now(DK).replace(
+            tzinfo=None, hour=0, minute=0, second=0, microsecond=0
+        )
         month_start = today.replace(day=1)
         next_month = (month_start + timedelta(days=32)).replace(day=1)
         prev_start = (month_start - timedelta(days=1)).replace(day=1)
@@ -197,7 +206,10 @@ class EnergiFynCoordinator(DataUpdateCoordinator[dict[str, MeterData]]):
         )
 
     async def _fill_peak(
-        self, data: MeterData, meter: Meter, imported: list[tuple[datetime, float, float]]
+        self,
+        data: MeterData,
+        meter: Meter,
+        imported: list[tuple[datetime, float, float]],
     ) -> None:
         """Busiest hour of the latest published day."""
         day = data.day.replace(tzinfo=None)
@@ -217,7 +229,9 @@ class EnergiFynCoordinator(DataUpdateCoordinator[dict[str, MeterData]]):
         data.heating = estate.get("heating")
         res = estate.get("residents") or {}
         data.residents = sum(res.values()) if res else None
-        data.electric_cars = (estate.get("electricCars") or {}).get("numberOfElectricCars")
+        data.electric_cars = (estate.get("electricCars") or {}).get(
+            "numberOfElectricCars"
+        )
         for m in estate.get("meters", []):
             if f"{m['number']}-{m['installationId']}" != meter.api_id:
                 continue
@@ -229,9 +243,9 @@ class EnergiFynCoordinator(DataUpdateCoordinator[dict[str, MeterData]]):
                 reading = counter.get("latestReading")
                 if reading:
                     data.last_reading = reading["value"]
-                    data.last_reading_date = datetime.fromisoformat(reading["date"]).replace(
-                        tzinfo=DK
-                    )
+                    data.last_reading_date = datetime.fromisoformat(
+                        reading["date"]
+                    ).replace(tzinfo=DK)
                 break
 
     @staticmethod
@@ -351,7 +365,9 @@ class EnergiFynCoordinator(DataUpdateCoordinator[dict[str, MeterData]]):
         for entry in resp["consumptionValues"]:
             if not entry["meassurements"]:
                 continue
-            start = dt_util.as_utc(datetime.fromisoformat(entry["date"]).replace(tzinfo=DK))
+            start = dt_util.as_utc(
+                datetime.fromisoformat(entry["date"]).replace(tzinfo=DK)
+            )
             if start in seen:  # ambiguous local hour on the DST fall-back day
                 continue
             seen.add(start)
@@ -371,4 +387,6 @@ class EnergiFynCoordinator(DataUpdateCoordinator[dict[str, MeterData]]):
             {"sum"},
         )
         rows = stats.get(statistic_id)
-        return float(rows[-1]["sum"]) if rows and rows[-1].get("sum") is not None else 0.0
+        return (
+            float(rows[-1]["sum"]) if rows and rows[-1].get("sum") is not None else 0.0
+        )

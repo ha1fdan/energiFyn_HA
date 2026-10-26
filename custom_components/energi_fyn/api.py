@@ -1,4 +1,5 @@
 """Async client for the Energi Fyn app API (reverse-engineered from the iOS app)."""
+
 from __future__ import annotations
 
 import asyncio
@@ -187,7 +188,10 @@ class EnergiFynClient:
             customer = self.customer_id or (await self.customers())[0]["customerNumber"]
             async with self._session.get(
                 f"{PROFILE_BASE}/customers/{customer}/o2-token",
-                headers={**APP_HEADERS, "Authorization": f"Bearer {self._access_token}"},
+                headers={
+                    **APP_HEADERS,
+                    "Authorization": f"Bearer {self._access_token}",
+                },
             ) as resp:
                 resp.raise_for_status()
                 self._o2_token = (await resp.json()).strip()

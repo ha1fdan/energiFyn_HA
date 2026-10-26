@@ -1,4 +1,5 @@
 """Constants for the Energi Fyn integration."""
+
 from datetime import timedelta
 
 DOMAIN = "energi_fyn"
