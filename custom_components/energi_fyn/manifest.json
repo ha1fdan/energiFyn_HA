@@ -1,7 +1,6 @@
 {
   "domain": "energi_fyn",
   "name": "Energi Fyn",
-  "categories": ["energy.meters_monitoring"],
   "codeowners": ["@ha1fdan"],
   "config_flow": true,
   "dependencies": ["recorder"],
